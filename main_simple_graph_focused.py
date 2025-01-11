@@ -22,6 +22,7 @@ def plot_graph(E):
 ###############################################################################################
 ### SIMPLE EXAMPLE ON EN_Matrix usage for the creation of a dataset for graph classification ##
 ###############################################################################################
+# Mỗi nút trong đồ thị sẽ được gán một vector đặc trưng ngẫu nhiên có 10 chiều
 feature_dims = 10
 
 # GRAPH #1
@@ -36,12 +37,11 @@ e.extend([[i, j, num] for j, i, num in e])
 # convert to numpy
 E = np.asarray(e)
 
-# number of nodes in this graph is equal to the max id + 1
+# Tìm số lượng nút trong đồ thị bằng cách lấy giá trị lớn nhất trong E
 nodes1 = np.max(E) + 1
-# create a matrix containing the features of each node (random in this simple case)
+# Tạo ma trận đặc trưng N cho các nút, Kích thước của N là (nodes1, feature_dims)
 N = np.random.rand(nodes1, feature_dims)
-
-# adding the last column that represent the id  (0) of the graph to which the node belongs
+# Thêm một cột mới vào ma trận đặc trưng N để biểu diễn ID của đồ thị
 N = np.concatenate((N, np.zeros((nodes1, 1), dtype=np.float32)), axis=1)
 
 
@@ -73,7 +73,7 @@ N1 = np.random.rand(nodes2, feature_dims)
 # adding the last column that represent the id (1) of the graph to which the node belongs
 N1 = np.concatenate((N1, np.ones((nodes2, 1), dtype=np.float32)), axis=1)
 
-# now, we create a unique matrix E containing both the graphs
+# Kết hợp danh sách cạnh của đồ thị #1 (E) và đồ thị #2 (E1) để tạo ra một đồ thị duy nhất chứa cả hai đồ thị
 
 E = np.concatenate((E, E1), axis=0)
 
@@ -81,18 +81,18 @@ E = np.concatenate((E, E1), axis=0)
 plot_graph(E)
 
 
-# now we create a unique matrix containing node features of both the graphs
+# Kết hợp ma trận đặc trưng của 2 đồ thị
 
 N_tot = np.concatenate((N, N1), axis=0)
 
-# Create targets labels for the graphs! In this simple example, there are two graphs, hence we have only 2 targets
+# tạo ra một mảng ngẫu nhiên gồm 2 phần tử, với mỗi phần tử là một số nguyên thuộc khoảng [0, 2) (tức là 0 hoặc 1, ví dụ: [0, 1], [1,1],[0,0])
 target = np.random.randint(2, size=(2,))
 
 cfg = GNNWrapper.Config()
 cfg.use_cuda = True
 cfg.device = utils.prepare_device(n_gpu_use=1, gpu_id=0)
 cfg.tensorboard = False
-cfg.epochs = 50
+cfg.epochs = 500
 
 cfg.activation = nn.Tanh()
 cfg.state_transition_hidden_dims = [5, ]
@@ -102,6 +102,7 @@ cfg.max_iterations = 50
 cfg.convergence_threshold = 0.01
 
 # NOTICE:  graph-focused task, set this to TRUE!
+# Đặt chế độ phân loại đồ thị (mỗi nhãn gắn với một đồ thị, không phải từng nút)
 cfg.graph_based = True
 
 cfg.log_interval = 10

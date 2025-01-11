@@ -35,7 +35,7 @@ def main():
                         help='input batch size for training (default: 64)')
     parser.add_argument('--test-batch-size', type=int, default=100, metavar='N',
                         help='input batch size for testing (default: 100)')
-    parser.add_argument('--epochs', type=int, default=100000, metavar='N',
+    parser.add_argument('--epochs', type=int, default=300, metavar='N',
                         help='number of epochs to train (default: 10)')
     parser.add_argument('--lr', type=float, default=0.0001, metavar='LR',
                         help='learning rate (default: 0.0001)')
@@ -62,7 +62,8 @@ def main():
     if not use_cuda:
         args.n_gpu_use = 0
 
-    device = utils.prepare_device(n_gpu_use=args.n_gpu_use, gpu_id=args.cuda_dev)
+    device = utils.prepare_device(
+        n_gpu_use=args.n_gpu_use, gpu_id=args.cuda_dev)
     # kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
 
     # torch.manual_seed(args.seed)
@@ -104,7 +105,8 @@ def main():
     model = SemiSupGNNWrapper(cfg)
     # dataset creation
     E, N, targets, mask_train, mask_test = dataloader.old_load_karate()
-    dset = dataloader.from_EN_to_GNN(E, N, targets, aggregation_type="sum", sparse_matrix=True)  # generate the dataset
+    dset = dataloader.from_EN_to_GNN(
+        E, N, targets, aggregation_type="sum", sparse_matrix=True)  # generate the dataset
     dset.idx_train = mask_train
     dset.idx_test = mask_test
     model(dset)  # dataset initalization into the GNN

@@ -74,13 +74,13 @@ edges_2 = 4
 
 # Plot second graph
 
-E1 = np.asarray(e1)
-N1 = np.eye(edges_2, dtype=np.float32)
+# E1 = np.asarray(e1)
+# N1 = np.eye(edges_2, dtype=np.float32)
 
-# Thêm một cột graph_id = 1(np.ones) vào ma trận đặc trưng nút N1 để xác định GRAPH #2
-N1 = np.concatenate((N1, np.ones((edges_2, 1), dtype=np.float32)), axis=1)
-# Hiển thị GRAPH #2
-plot_graph(E1, N1)
+# # Thêm một cột graph_id = 1(np.ones) vào ma trận đặc trưng nút N1 để xác định GRAPH #2
+# N1 = np.concatenate((N1, np.ones((edges_2, 1), dtype=np.float32)), axis=1)
+# # Hiển thị GRAPH #2
+# plot_graph(E1, N1)
 
 # Hợp nhất danh sách cạnh E của GRAPH #1 và e2
 E = np.concatenate((E, np.asarray(e2)), axis=0)
@@ -88,7 +88,8 @@ E = np.concatenate((E, np.asarray(e2)), axis=0)
 N_tot = np.eye(edges + edges_2, dtype=np.float32)
 N_tot = np.concatenate(
     (N_tot, np.zeros((edges + edges_2, 1), dtype=np.float32)), axis=1)
-# plot_graph(E, N_tot)
+
+plot_graph(E, N_tot)
 
 # Create Input to GNN
 # Trong thực tế: Nhãn (labels) thường không được tạo ngẫu nhiên mà dựa vào dữ liệu thực tế
@@ -160,5 +161,5 @@ for epoch in range(1, cfg.epochs + 1):
         model.test_step(epoch)
 
     # Theo dõi kết quả
-    # if epoch % 100 == 0:  # Show graph visualization every 100 epochs
-    #     plot_graph(E, N_tot)
+    if epoch % 100 == 0:  # Show graph visualization every 100 epochs
+        plot_graph(E, N_tot)
