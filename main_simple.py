@@ -25,7 +25,7 @@ E = np.asarray(e)  # Mảng NumPy chứa danh sách cạnh của đồ thị đ�
 
 # number of nodes
 edges = 5
-# Tạo ma trận đặc trưng cho nút dưới dạng One-Hot Encoding.
+# Tạo ma trận đặc trưng cho nút dưới dạng One-Hot Encoding. Ma trận đơn vị là ma trận vuông trong đó tất cả các phần tử trên đường chéo chính đều bằng 1
 # Ma trận N có kích thước (5, 5) vì đồ thị có 5 nút
 N = np.eye(edges, dtype=np.float32)
 # N = [[1, 0, 0, 0, 0],

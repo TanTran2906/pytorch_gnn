@@ -35,20 +35,24 @@ def main():
                         help='input batch size for training (default: 64)')
     parser.add_argument('--test-batch-size', type=int, default=100, metavar='N',
                         help='input batch size for testing (default: 100)')
-    parser.add_argument('--epochs', type=int, default=300, metavar='N',
+    parser.add_argument('--epochs', type=int, default=500, metavar='N',
                         help='number of epochs to train (default: 10)')
     parser.add_argument('--lr', type=float, default=0.0001, metavar='LR',
                         help='learning rate (default: 0.0001)')
+    # --momentum: Hệ số động lượng (momentum) trong thuật toán SGD
     parser.add_argument('--momentum', type=float, default=0.5, metavar='M',
                         help='SGD momentum (default: 0.5)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
+    # Chọn GPU cụ thể (theo ID) để huấn luyện
     parser.add_argument('--cuda_dev', type=int, default=0,
                         help='select specific CUDA device for training')
+    # Chỉ định số GPU sẽ sử dụng
     parser.add_argument('--n_gpu_use', type=int, default=1,
                         help='select number of CUDA device for training')
     # parser.add_argument('--seed', type=int, default=1, metavar='S',
     #                     help='random seed (default: 1)')
+    # Khoảng thời gian giữa các lần ghi nhật ký (log)
     parser.add_argument('--log-interval', type=int, default=50, metavar='N',
                         help='logging training status cadency')
     parser.add_argument('--save-model', action='store_true', default=False,
@@ -97,6 +101,7 @@ def main():
     cfg.convergence_threshold = 0.1
     cfg.graph_based = False
     cfg.log_interval = 10
+    # semisupervised (học bán giám sát), nghĩa là chỉ có một phần dữ liệu được gắn nhãn
     cfg.task_type = "semisupervised"
 
     cfg.lrw = 0.01
@@ -104,9 +109,11 @@ def main():
     # model creation
     model = SemiSupGNNWrapper(cfg)
     # dataset creation
+    # mask_train: Mask (mặt nạ) chỉ định các nút được sử dụng cho huấn luyện
     E, N, targets, mask_train, mask_test = dataloader.old_load_karate()
     dset = dataloader.from_EN_to_GNN(
         E, N, targets, aggregation_type="sum", sparse_matrix=True)  # generate the dataset
+    # Gán các mask để phân chia dữ liệu thành tập huấn luyện và tập kiểm tra
     dset.idx_train = mask_train
     dset.idx_test = mask_test
     model(dset)  # dataset initalization into the GNN

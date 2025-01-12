@@ -33,11 +33,15 @@ def main():
     # help: Mô tả ý nghĩa của tham số để hiển thị khi chạy lệnh --help
     parser.add_argument('--epochs', type=int, default=100, metavar='N',
                         help='number of epochs to train (default: 100)')
+    # --lr: Tốc độ học (learning rate)
     parser.add_argument('--lr', type=float, default=0.0001, metavar='LR',
                         help='learning rate (default: 0.0001)')
+    # CUDA (Compute Unified Device Architecture) là một nền tảng và mô hình lập trình được NVIDIA phát triển, cho phép sử dụng GPU (Graphics Processing Unit) để tăng tốc các tính toán song song
+    # Mặc định: CUDA được bật (default=False), nghĩa là nếu GPU khả dụng, mô hình sẽ được huấn luyện trên GPU
     # action='store_true': Gán giá trị True nếu tham số xuất hiện, ngược lại là False
     parser.add_argument('--no-cuda', action='store_true', default=True,
                         help='disables CUDA training')
+    # Chọn GPU cụ thể (theo ID) để huấn luyện
     parser.add_argument('--cuda_dev', type=int, default=0,
                         help='select specific CUDA device for training')
     parser.add_argument('--n_gpu_use', type=int, default=1,
